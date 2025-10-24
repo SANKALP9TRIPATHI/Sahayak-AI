@@ -8,7 +8,6 @@ import re
 from PIL import Image
 import pytesseract
 import cv2
-from google.colab.patches import cv2_imshow
 import numpy as np
 from rtree import index
 from dataclasses import dataclass
@@ -141,7 +140,7 @@ y_start = height - 251
 x_end = width - 100
 y_end = height - 175
 cropped = image[y_start:y_end, x_start:x_end]
-cv2_imshow(cropped)
+# cv2.imshow(cropped)
 cropped_path = "/content/signature_crop.png"
 cv2.imwrite(cropped_path, cropped)
 

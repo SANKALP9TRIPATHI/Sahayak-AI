@@ -8,7 +8,6 @@ import re
 from PIL import Image
 import pytesseract
 import cv2
-from google.colab.patches import cv2_imshow
 import numpy as np
 from rtree import index
 from dataclasses import dataclass
@@ -20,10 +19,10 @@ import sys
 # In[163]:
 
 
-PATH = "/content/samplerenewalformEdited.jpg"
+PATH = f"{sys.argv[1]}/license.jpg"
 image = cv2.imread(PATH)
 text = pytesseract.image_to_string(Image.open(PATH), config='--dpi 440 -l eng')
-print(text)
+# print(text)
 
 
 # In[164]:
@@ -126,8 +125,8 @@ def extract_info(text):
     return data
 
 info = extract_info(text)
-for key, value in info.items():
-    print(f"{key}: {value}")
+# for key, value in info.items():
+#     print(f"{key}: {value}")
 
 
 # JSON
@@ -141,7 +140,7 @@ y_start = height - 251
 x_end = width - 100
 y_end = height - 175
 cropped = image[y_start:y_end, x_start:x_end]
-cv2_imshow(cropped)
+# cv2.imshow(cropped)
 cropped_path = "/content/signature_crop.png"
 cv2.imwrite(cropped_path, cropped)
 
@@ -159,12 +158,12 @@ print(json_data)
 # In[ ]:
 
 
-if _name_ == "_main_":
+if __name__ == "_main_":
     if len(sys.argv) != 2:
         print(json.dumps({"error": "Need one image path: the renewal form image"}))
         sys.exit(1)
 
-    image_path = sys.argv[1]
-    data = extract_info(pytesseract.image_to_string(Image.open(image_path), config='--dpi 440 -l eng'))
+    PATH = sys.argv[1]
+    data = extract_info(pytesseract.image_to_string(Image.open(PATH), config='--dpi 440 -l eng'))
     print(json.dumps(data, indent=4))
 

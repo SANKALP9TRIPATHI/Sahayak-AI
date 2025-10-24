@@ -117,43 +117,75 @@ function licenseFormScan(
   });
 }
 
+// const data_extractor = async () => {
+//   try {
+//     const { Name, DOB, Gender, Aadhaar_Number, Address, Photo_Path } =
+//       await aadhaarScan(
+//         "dist/services/Aadhar_Data_Extractor.py",
+//         "dist/bucket/aadhaar"
+//       );
+//     const {
+//       Number,
+//       Date_of_Issue,
+//       Class_of_Vehicles,
+//       Issued_by,
+//       Fee_paid,
+//       Signature_Path,
+//     } = await licenseFormScan(
+//       "dist/services/DataExtractor.py",
+//       "dist/bucket/license"
+//     );
+//     console.log("Returned JSON object:", Number);
+//     return {
+//       Name,
+//       DOB,
+//       Gender,
+//       Aadhaar_Number,
+//       Address,
+//       Photo_Path,
+//       Number,
+//       Date_of_Issue,
+//       Class_of_Vehicles,
+//       Issued_by,
+//       Fee_paid,
+//       Signature_Path,
+//     };
+
+//     // result is the JSON object returned by Python
+//   } catch (err) {
+//     console.error("Error:", err);
+//     throw err;
+//   }
+//   return { error: "empty" };
+// };
+
 const data_extractor = async () => {
   try {
-    const { Name, DOB, Gender, Aadhaar_Number, Address, Photo_Path } =
-      await aadhaarScan(
-        "dist/services/Aadhar_Data_Extractor.py",
-        "dist/bucket/aadhaar"
-      );
-    const {
-      Number,
-      Date_of_Issue,
-      Class_of_Vehicles,
-      Issued_by,
-      Fee_paid,
-      Signature_Path,
-    } = await licenseFormScan(
-      "dist/services/DataExtractor.py",
-      "dist/bucket/license"
+    // Aadhaar extraction
+    const aadhaar = await aadhaarScan(
+      path.resolve(__dirname, "./Aadhar_Data_Extractor.py"),
+      path.resolve(__dirname, "../../bucket/aadhaar")
     );
+    // License extraction
+    const license = await licenseFormScan(
+      path.resolve(__dirname, "./DataExtractor.py"),
+      path.resolve(__dirname, "../../bucket/license")
+    );
+
+    console.log("Aadhaar Extracted:", aadhaar);
+    console.log("License Extracted:", license);
+
+    // Return combined object
     return {
-      Name,
-      DOB,
-      Gender,
-      Aadhaar_Number,
-      Address,
-      Photo_Path,
-      Number,
-      Date_of_Issue,
-      Class_of_Vehicles,
-      Issued_by,
-      Fee_paid,
-      Signature_Path,
+      ...aadhaar,
+      ...license,
     };
-    // result is the JSON object returned by Python
-    console.log("Returned JSON object:", Name);
   } catch (err) {
-    console.error("Error:", err);
+    console.error("Error in data_extractor:", err);
+    throw err; // Important: propagate to route handler
   }
 };
+
+export default data_extractor;
 
 module.exports = data_extractor;

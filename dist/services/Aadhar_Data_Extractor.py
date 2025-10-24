@@ -129,15 +129,15 @@ def extract_aadhaar_details(front_path, back_path):
     photo_path = extract_face(front_path)
 
     result = {
-        "Name": name,
-        "DOB": dob,
-        "Gender": gender,
-        "Aadhaar_Number": aadhaar_number,
-        "Address": address,
-        "Photo_Path": photo_path
+        "name": name,
+        "dob": dob,
+        "gender": gender,
+        "aadhaar_Number": aadhaar_number,
+        "address": address,
+        "photo_Path": photo_path
     }
 
-    # os.makedirs("outputs", exist_ok=True)
+    os.makedirs("outputs", exist_ok=True)
     with open("outputs/result.json", "w", encoding="utf-8") as f:
         json.dump(result, f, indent=4)
 
